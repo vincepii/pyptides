@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(name='tool-elena',
       version='0.1',
-      description='Analyzes files from Elena',
+      description='Analyzes output of unknown tool',
       author='Vincenzo Pii',
       author_email='vinc.pii@gmail.com',
       url='',
