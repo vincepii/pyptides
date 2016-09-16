@@ -1,19 +1,24 @@
 import matplotlib.pyplot as plt
+import os
 
 
 class DataPlotter(object):
 
     def __init__(self):
         super(DataPlotter, self).__init__()
+        # Maps each section name to its xrange
         self._index = {}
-        # List of dicts, each dicts is a curve to be plotted with the reference x values
+        # Dict of dicts, each dicts is a curve to be plotted with the reference x values
+        # {'section_name': {'filename': {points},
+        #                   'filename': {points}}
+        # }
         self._data = {}
 
-    def adddataset(self, name, x_range, data):
+    def adddataset(self, name, x_range, data, filename):
         self._index[name] = x_range
         if not self._data.get(name):
-            self._data[name] = []
-        self._data[name].append(data)
+            self._data[name] = {}
+        self._data[name][filename] = data
 
     def plot(self):
         '''
@@ -21,11 +26,12 @@ class DataPlotter(object):
         '''
         for name in self._index.keys():
             x_range = self._index[name]
-            for points in self._data[name]:
-                plt.plot(x_range, [points[k] for k in x_range])
-                fig = plt.figure()
-                fig.suptitle('bold figure suptitle', fontsize=14, fontweight='bold')
-        # TODO: write title in plot and save it
-        # Title will be name
-        # Legend with curves (filenames?)
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            ax.set_title(name)
+            ax.set_ylabel('Wavelength,CircularDichroism')
+            for filenaname, points in self._data[name].items():
+                curve_name = os.path.split(filenaname)[-1]
+                ax.plot(x_range, [points[k] for k in x_range], label=curve_name)
+        plt.legend()
         plt.show()
